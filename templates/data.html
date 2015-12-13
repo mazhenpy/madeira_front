@@ -11,6 +11,7 @@
     <script src="/static/js/send_msg.js"></script>
     <script src="/static/js/send_order.js"></script>
     <script src="/static/js/callback.js"></script>
+    <script src="/static/js/ajax_verify.js"></script>
     <title>流量对接</title>
     <!-- Bootstrap -->
     <link href="/static/css/bootstrap.min.css" rel="stylesheet">
@@ -53,39 +54,40 @@
     <form>
         <div class="form-group">
             <label for="contract_id">contract_id</label>
-            <input type="text" class="form-control" id="contract_id" placeholder="">
+            <!--<input type="text" class="form-control" id="contract_id" placeholder="">-->
+            <input class="form-control" id="contract_id" type="text" placeholder="" value="100001" disabled>
         </div>
         <div class="form-group">
-            <label for="partner_no">partner_no</label>
+            <label for="partner_no">partner_no</label><span class="error" id="error2"></span>
             <input type="text" class="form-control" id="partner_no" placeholder="">
         </div>
         <div class="form-group">
-            <label for="phone_id">phone_id</label>
+            <label for="phone_id">phone_id</label><span class="error" id="error3"></span>
             <input type="text" class="form-control" id="phone_id" placeholder="">
         </div>
         <div class="form-group">
-            <label for="plat_offer_id">plat_offer_id</label>
+            <label for="plat_offer_id">plat_offer_id</label><span class="error" id="error4"></span>
             <input type="text" class="form-control" id="plat_offer_id" placeholder="">
         </div>
         <div class="form-group">
-            <label for="facevalue">facevalue</label>
+            <label for="facevalue">facevalue</label><span class="error" id="error5"></span>
             <input type="text" class="form-control" id="facevalue" placeholder="">
         </div>
         <div class="form-group">
-            <label for="order_id">order_id</label>
+            <label for="order_id">order_id</label><span class="error" id="error6"></span>
             <input type="text" class="form-control" id="order_id" placeholder="">
         </div>
         <div class="form-group">
-            <label for="effect_type">effect_type</label>
+            <label for="effect_type">effect_type</label><span class="error" id="error7"></span>
             <input type="text" class="form-control" id="effect_type" placeholder="">
         </div>
 
         <div class="form-group">
-            <label for="request_no">request_no</label>
+            <label for="request_no">request_no</label><span class="error" id="error8"></span>
             <input type="text" class="form-control" id="request_no" placeholder="">
         </div>
         <div class="form-group">
-            <label for="timestamp">timestamp</label>
+            <label for="timestamp">timestamp</label><span class="error" id="error9"></span>
             <input type="text" class="form-control" id="timestamp" placeholder="">
         </div>
 

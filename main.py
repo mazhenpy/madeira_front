@@ -9,7 +9,9 @@ import tornado.httpserver
 import tornado.web
 import yaml
 
-from handlers.core import IndexHandelr
+from handlers.core import IndexHandelr, AjaxContractIdHandler, AjaxPartnerNoHandler, AjaxPhoneIdHandler, \
+    AjaxPlatOfferIdHandler, AjaxFacevalueHandler, AjaxOrderIdHandler, AjaxEffectTypeHandler, AjaxRequestNoHandler, \
+    AjaxTimeStampHandler
 from handlers.core import RandNumberHandelr
 from handlers.core import SendMsgHandler
 from handlers.core import CallbackInterceptHandler
@@ -34,6 +36,8 @@ A tributary of Amazon
 class Application(tornado.web.Application):
     def __init__(self):
         handlers = [
+            (r"/data/order", DataOrderHandler),
+
             (r"/data/index", IndexHandelr),
             (r"/rand_number", RandNumberHandelr),
             (r"/send_msg", SendMsgHandler),
@@ -41,7 +45,16 @@ class Application(tornado.web.Application):
             (r"/callback_down", CallbackDownstreamHandler),
             (r"/send_order", SendOrderHandler),
 
-            (r"/data/order", DataOrderHandler),
+            (r"/ajax_contract_id", AjaxContractIdHandler),
+            (r"/ajax_partner_no", AjaxPartnerNoHandler),
+            (r"/ajax_phone_id", AjaxPhoneIdHandler),
+            (r"/ajax_plat_offer_id", AjaxPlatOfferIdHandler),
+            (r"/ajax_facevalue", AjaxFacevalueHandler),
+            (r"/ajax_order_id", AjaxOrderIdHandler),
+            (r"/ajax_effect_type", AjaxEffectTypeHandler),
+            (r"/ajax_request_no", AjaxRequestNoHandler),
+            (r"/ajax_timestamp", AjaxTimeStampHandler),
+
 
         ]
 

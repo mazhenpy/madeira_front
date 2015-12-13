@@ -22,7 +22,7 @@ $(document).ready(function () {
                 "facevalue": facevalue,
                 "plat_offer_id": plat_offer_id,
                 "phone_id": phone_id,
-                "request_no": order_id,
+                "request_no": request_no,
                 "timestamp": timestamp,
                 "effect_type": effect_type
             },

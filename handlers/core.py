@@ -96,7 +96,6 @@ class CallbackDownstreamHandler(BaseHandler):
 
 class SendMsgHandler(tornado.web.RequestHandler):
     def post(self):
-        print("in")
         contract_id = self.get_body_argument('contract_id')
         order_id = self.get_body_argument('order_id')
         facevalue = self.get_body_argument('facevalue')
@@ -105,6 +104,12 @@ class SendMsgHandler(tornado.web.RequestHandler):
         timestamp = self.get_body_argument('timestamp')
         effect_type = self.get_body_argument('effect_type')
         partner_no = self.get_body_argument('partner_no')
+        request_no = self.get_body_argument('request_no')
+
+        if order_id == '' or facevalue == '' or plat_offer_id == '' or phone_id == '' or timestamp == '' or effect_type == '' or partner_no == '' or request_no == '':
+            error = '缺少参数'
+            self.finish({"beforedata": error,"afterdata": error})
+            return
 
         code = {
             "partner_no": partner_no,
@@ -117,8 +122,6 @@ class SendMsgHandler(tornado.web.RequestHandler):
             "timestamp": timestamp,
             "effect_type": effect_type
         }
-
-        # print("UPSTREAM CALL CODE ",code)
 
         before_aes = {
             "partner_no": partner_no,
@@ -155,14 +158,16 @@ class SendOrderHandler(BaseHandler):
     def post(self):
         body = self.get_body_argument("send_order")
 
-        # body = json.dumps(body)
+        if body == '' or body == "缺少参数":
+            self.finish({'resp_body': "缺少参数"})
+            return
+
         resp_body = None
-        print("报文：", body)
+
         http_client = AsyncHTTPClient()
         try:
             url = "http://localhost:7000/data/order"
-            #url = "http://www.baidu.com"
-            print(url)
+
             response = yield http_client.fetch(url, method='POST', body=body, request_timeout=120)
 
             if response and response.code == 200:
@@ -174,3 +179,117 @@ class SendOrderHandler(BaseHandler):
             print('e:', e)
 
         self.finish({'resp_body': resp_body})
+
+
+# 1
+class AjaxContractIdHandler(tornado.web.RequestHandler):
+    def post(self):
+        error = None
+        contract_id = self.get_body_argument("contract_id")
+        print(contract_id)
+        if contract_id == '':
+            error = "#请输入contract_id"
+        elif contract_id != "100001":
+            error = "#contract_id为100001"
+        self.finish({"error": error})
+
+
+# 2
+class AjaxPartnerNoHandler(tornado.web.RequestHandler):
+    def post(self):
+        error = None
+        partner_no = self.get_body_argument("partner_no")
+        print(partner_no)
+        if partner_no == '':
+            error = "#请输入partner_no"
+        elif len(partner_no) != 6:
+            error = "#请输入6位partner_no"
+        self.finish({"error": error})
+
+
+#3
+class AjaxPhoneIdHandler(tornado.web.RequestHandler):
+    def post(self):
+        error = None
+        phone_id = self.get_body_argument("phone_id")
+        print(phone_id)
+        if phone_id == '':
+            error = "#请输入phone_id"
+        elif len(phone_id) != 11:
+            error = "#请输入11位手机号"
+
+        self.finish({"error": error})
+
+
+#4
+class AjaxPlatOfferIdHandler(tornado.web.RequestHandler):
+    def post(self):
+        error = None
+        plat_offer_id = self.get_body_argument("plat_offer_id")
+        print(plat_offer_id)
+        if plat_offer_id == '':
+            error = "#请输入plat_offer_id"
+
+        self.finish({"error": error})
+
+
+#5
+class AjaxFacevalueHandler(tornado.web.RequestHandler):
+    def post(self):
+        error = None
+        facevalue = self.get_body_argument("facevalue")
+        print(facevalue)
+        if facevalue == '':
+            error = "#请输入facevalue"
+
+        self.finish({"error": error})
+
+
+#6
+class AjaxOrderIdHandler(tornado.web.RequestHandler):
+    def post(self):
+        error = None
+        order_id = self.get_body_argument("order_id")
+        print(order_id)
+        if order_id == '':
+            error = "#请输入order_id"
+
+        self.finish({"error": error})
+
+
+#7
+class AjaxEffectTypeHandler(tornado.web.RequestHandler):
+    def post(self):
+        error = None
+        effect_type = self.get_body_argument("effect_type")
+        print(effect_type)
+        if effect_type == '':
+            error = "#请输入effect_type"
+        elif effect_type != 1:
+            error = "#effect_type建议为1"
+
+        self.finish({"error": error})
+
+
+#8
+class AjaxRequestNoHandler(tornado.web.RequestHandler):
+    def post(self):
+        error = None
+        request_no = self.get_body_argument("request_no")
+        print(request_no)
+        if request_no == '':
+            error = "#请输入request_no"
+
+        self.finish({"error": error})
+
+
+#9
+class AjaxTimeStampHandler(tornado.web.RequestHandler):
+    def post(self):
+        error = None
+        timestamp = self.get_body_argument("timestamp")
+        print(timestamp)
+        if timestamp == '':
+            error = "#请输入timestamp"
+
+        self.finish({"error": error})

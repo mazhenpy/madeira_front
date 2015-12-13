@@ -33,3 +33,8 @@ h2 {
 #btn4 {
     margin-bottom: 100px;
 }
+
+.error{
+    color: red;
+    margin-left: 20px;
+}
