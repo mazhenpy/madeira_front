@@ -1,0 +1,13 @@
+downstream:
+  #public test
+  '100002': { name: 'publicA',                                             pass: 'AVPjVUb5eequdRzq', iv: '8304883479189640', back_url: 'http://localhost:8899/echo'}
+  '100003': { name: 'publicB',                           master: '100002', pass: 'AVPjVUb5eequdRzq', iv: '8304883479189640', back_url: 'http://localhost:8899/echo'}
+  '100004': { name: 'publicC',                           master: '100002', pass: 'AVPjVUb5eequdRzq', iv: '8304883479189640', back_url: 'http://localhost:8899/echo'}
+
+  '111111':    { name: 'aspire_test',       shard: '100001', master: '100001', pass: 'AVPjVUb5eequdRzq', iv: '8304883479189640', back_url: 'http://localhost:8899/echo'}
+  '100010':   { name: '7811_test',        shard: '100001', master: '100001', pass: 'fas67SNoKeFKXLwX', iv: '8885988202938060', back_url: 'http://localhost:10020/callback/upstream.do'}
+  '100001':  { name: 'data_test',        shard: '100001', master: '100001', pass: 'CwcnldOjID07WHKV', iv: '1973874772082924', back_url: 'http://localhost:10021/echo'}
+  '700339': { name: 'mazhen',       shard: '700113', master: '700113', pass: 'JI8PprTZ8fJ4Efzq', iv: '5697393085725902', back_url: 'http://localhost:8898/echo'}
+
+
+  '200822': { name: '跃程',       key: 'hiNmgVRqEl8gxCzh0SuaJsKIsAGXvfeA', ip_num: 2 }

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/rand_number.js"></script>
+    <script src="/static/js/send_msg.js"></script>
+    <script src="/static/js/send_order.js"></script>
+    <script src="/static/js/callback.js"></script>
+    <title>流量对接</title>
+    <!-- Bootstrap -->
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/index.css" rel="stylesheet">
+    <!--<link href="reset.css" rel="stylesheet">-->
+</head>
+<body>
+
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <h2>流量对接自助服务</h2>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container-fluid -->
+</nav>
+
+<div class="container">
+    <button type="button" class="btn btn-primary btn-lg" id="btn1">获取测试账号信息</button>
+    <br/>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">测试账号：</div>
+        <div class="panel-body">
+            <p>代理商编号：<span id="partnerno"></span></p>
+
+            <p>合同号：<span id="contractid"></span></p>
+
+            <p>AES 密钥：<span id="key"></span></p>
+
+            <p>AES IV：<span id="iv"></span></p>
+        </div>
+    </div>
+
+
+    <div class="alert alert-success" role="alert">以下参数为默认值,可根据需要自行修改</div>
+    <form>
+        <div class="form-group">
+            <label for="contract_id">contract_id</label>
+            <input type="text" class="form-control" id="contract_id" placeholder="">
+        </div>
+        <div class="form-group">
+            <label for="partner_no">partner_no</label>
+            <input type="text" class="form-control" id="partner_no" placeholder="">
+        </div>
+        <div class="form-group">
+            <label for="phone_id">phone_id</label>
+            <input type="text" class="form-control" id="phone_id" placeholder="">
+        </div>
+        <div class="form-group">
+            <label for="plat_offer_id">plat_offer_id</label>
+            <input type="text" class="form-control" id="plat_offer_id" placeholder="">
+        </div>
+        <div class="form-group">
+            <label for="facevalue">facevalue</label>
+            <input type="text" class="form-control" id="facevalue" placeholder="">
+        </div>
+        <div class="form-group">
+            <label for="order_id">order_id</label>
+            <input type="text" class="form-control" id="order_id" placeholder="">
+        </div>
+        <div class="form-group">
+            <label for="effect_type">effect_type</label>
+            <input type="text" class="form-control" id="effect_type" placeholder="">
+        </div>
+
+        <div class="form-group">
+            <label for="request_no">request_no</label>
+            <input type="text" class="form-control" id="request_no" placeholder="">
+        </div>
+        <div class="form-group">
+            <label for="timestamp">timestamp</label>
+            <input type="text" class="form-control" id="timestamp" placeholder="">
+        </div>
+
+    </form>
+    <button type="button" class="btn btn-primary btn-lg" id="btn2">生成报文</button>
+    <br/>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">加密前：</div>
+        <div class="panel-body">
+            <p id="before"></p>
+        </div>
+    </div>
+    <br/>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">加密后：</div>
+        <div class="panel-body">
+            <p id="after"></p>
+        </div>
+    </div>
+
+
+    <button type="button" class="btn btn-primary btn-lg" id="btn3">发送订单</button>
+    <br/>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">订单处理结果：</div>
+        <div class="panel-body">
+            <p id="return"></p>
+        </div>
+    </div>
+
+
+    <div class="form-group">
+        <label for="timestamp">回调地址</label>
+        <input type="text" class="form-control" id="backurl" placeholder="">
+    </div>
+    <br/>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">回调报文：</div>
+        <div class="panel-body">
+            <p id="callback"></p>
+        </div>
+    </div>
+    <button type="button" class="btn btn-primary btn-lg" id="btn4">发送回调</button>
+
+</div>
+
+
+</body>
+</html>
