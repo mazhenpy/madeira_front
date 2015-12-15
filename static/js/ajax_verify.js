@@ -46,10 +46,13 @@ $(function(){
 $(function(){
      $("#plat_offer_id").bind('blur',function(){
        var plat_offer_id=$("#plat_offer_id").val();
+       var phone_id=$("#phone_id").val();
        $.ajax({
         type:"POST",
         url:"/ajax_plat_offer_id",
-        data:{'plat_offer_id':plat_offer_id},
+        data:{'plat_offer_id':plat_offer_id,
+                'phone_id':phone_id
+        },
         dataType:"json",
         success: function(data) {
           $("#error4").html(data.error);
@@ -60,11 +63,16 @@ $(function(){
 
 $(function(){
      $("#facevalue").bind('blur',function(){
+       var phone_id=$("#phone_id").val();
        var facevalue=$("#facevalue").val();
+       var plat_offer_id=$("#plat_offer_id").val();
        $.ajax({
         type:"POST",
         url:"/ajax_facevalue",
-        data:{'facevalue':facevalue},
+        data:{'facevalue':facevalue,
+              'plat_offer_id':plat_offer_id,
+              'phone_id':phone_id
+        },
         dataType:"json",
         success: function(data) {
           $("#error5").html(data.error);

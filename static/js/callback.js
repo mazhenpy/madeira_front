@@ -1,8 +1,13 @@
 $(document).ready(function () {
     $("#btn4").click(function () {
 
+        var callback_data = $("#callback").html();
         var backurl = $("#backurl").val();
-        var order_id = $("#order_id").val();
+
+        if (backurl.length==0){
+            $("#callback_url").html('#请输入回调地址');
+        }
+
         $.ajax({
             type: "post",
             dataType: "json",
@@ -10,11 +15,12 @@ $(document).ready(function () {
 
             data: {
                 "backurl": backurl,
-                "order_id": order_id
+                "callback_data": callback_data
             },
             success: function (data) {
-                $("#callback").html(data.data);
+                $("#callback_url").html('#已发送');
             }
+
         })
     });
 });

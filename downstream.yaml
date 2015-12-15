@@ -11,3 +11,17 @@ downstream:
 
 
   '200822': { name: '跃程',       key: 'hiNmgVRqEl8gxCzh0SuaJsKIsAGXvfeA', ip_num: 2 }
+
+
+
+  #通用账号
+  '800311': { name: '通用账号1',       shard: '700113', master: '700113', pass: 'rToMtEKTdH84pVMy', iv: '5682782222436358', back_url: 'http://localhost:8898/echo'}
+  '800312': { name: '通用账号2',       shard: '700113', master: '700113', pass: 'f64aZSvW9JMRGgsH', iv: '1845632943519093', back_url: 'http://localhost:8898/echo'}
+  '800313': { name: '通用账号3',       shard: '700113', master: '700113', pass: 'gg2M2Xz7cqmNusij', iv: '9744880865581734', back_url: 'http://localhost:8898/echo'}
+  '800314': { name: '通用账号4',       shard: '700113', master: '700113', pass: 'j5KhfTsYzFq5xm6A', iv: '7952654166422695', back_url: 'http://localhost:8898/echo'}
+  '800315': { name: '通用账号5',       shard: '700113', master: '700113', pass: 'cAhAhcuDjMT54zUo', iv: '4542068593539126', back_url: 'http://localhost:8898/echo'}
+  '800316': { name: '通用账号6',       shard: '700113', master: '700113', pass: 'CNV3f1LFf2Yd0ScX', iv: '4333806869175874', back_url: 'http://localhost:8898/echo'}
+  '800317': { name: '通用账号7',       shard: '700113', master: '700113', pass: 'atc9dtbSSu6tFfax', iv: '7336827475793436', back_url: 'http://localhost:8898/echo'}
+  '800318': { name: '通用账号8',       shard: '700113', master: '700113', pass: 'MIHxA67mzkqOEBFV', iv: '0723953348966613', back_url: 'http://localhost:8898/echo'}
+  '800319': { name: '通用账号9',       shard: '700113', master: '700113', pass: '8w1pH1K1MJ8MSEJP', iv: '7978044127311173', back_url: 'http://localhost:8898/echo'}
+  '800320': { name: '通用账号10',       shard: '700113', master: '700113', pass: 'nGOTXvFHr4T4Ev8G', iv: '2244441791824934', back_url: 'http://localhost:8898/echo'}

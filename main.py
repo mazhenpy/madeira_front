@@ -2,7 +2,6 @@
 import os
 
 from redis.sentinel import Sentinel
-
 from tornado.httpclient import AsyncHTTPClient
 import tornado.ioloop
 import tornado.httpserver
@@ -14,7 +13,6 @@ from handlers.core import IndexHandelr, AjaxContractIdHandler, AjaxPartnerNoHand
     AjaxTimeStampHandler
 from handlers.core import RandNumberHandelr
 from handlers.core import SendMsgHandler
-from handlers.core import CallbackInterceptHandler
 from handlers.core import CallbackDownstreamHandler
 from handlers.core import SendOrderHandler
 from handlers.order import DataOrderHandler
@@ -41,7 +39,7 @@ class Application(tornado.web.Application):
             (r"/data/index", IndexHandelr),
             (r"/rand_number", RandNumberHandelr),
             (r"/send_msg", SendMsgHandler),
-            (r"/callback_intercept", CallbackInterceptHandler),
+
             (r"/callback_down", CallbackDownstreamHandler),
             (r"/send_order", SendOrderHandler),
 
@@ -78,13 +76,13 @@ class Application(tornado.web.Application):
         sentinels = [(c['ip'], c['port']) for c in self.config['cache']]
         self.sentinel = Sentinel(sentinels, socket_timeout=0.1, db=1, decode_responses=True)
         self.port = self.config['config']['port']
-
+        self.ip = self.config['config']['ip']
 
 if __name__ == "__main__":
     AsyncHTTPClient.configure(None, max_clients=200)
     print(LOGO)
     app = Application()
-    print('http://localhost:%d/data/index' % app.port)
+    print('http://{0}:{1}/data/index'.format(app.ip,app.port))
     http_server = tornado.httpserver.HTTPServer(app, xheaders=True)
     http_server.listen(app.port)
     tornado.ioloop.IOLoop.instance().start()

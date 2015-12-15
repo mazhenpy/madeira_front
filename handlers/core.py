@@ -2,7 +2,6 @@
 import base64
 import json
 import random
-import string
 import time
 
 from Crypto.Cipher import AES
@@ -15,6 +14,7 @@ import tornado.websocket
 import tornado.ioloop
 
 from handlers import BaseHandler
+from utils.products_map import Mobile, Unicom, Telecom
 
 
 BS = 16
@@ -35,21 +35,21 @@ class IndexHandelr(tornado.web.RequestHandler):
 
 class RandNumberHandelr(BaseHandler):
     def get(self):
-        # master = self.master
-        # master.set('point:111111','10000')
         timestamp = int(time.time())
-        key = self.gen_key(16, string.ascii_uppercase + string.ascii_lowercase + string.digits)
-        iv = self.gen_key(16, string.digits)
-        partner_no = "700339"
-        key = "JI8PprTZ8fJ4Efzq"
-        iv = "5697393085725902"
+
+        partner_no_tuple = (
+            '800311', '800312', '800313', '800314', '800315', '800316', '800317', '800318', '800319', '800320',)
+        partner_no = partner_no_tuple[random.randint(0, len(partner_no_tuple)) - 1]
+        key = self.application.config["downstream"][partner_no]["pass"]
+        iv = self.application.config["downstream"][partner_no]["iv"]
+
         self.finish({
             'key': key,
             'iv': iv,
             'contract_id': '100001',
-            'partner_no': '700339',
+            'partner_no': partner_no,
             'timestamp': timestamp,
-            'phone_id': '15950536229',
+            'phone_id': '15955555555',
             'facevalue': '3',
             'order_id': timestamp,
             'plat_offer_id': 'TBM00000100A',
@@ -57,27 +57,13 @@ class RandNumberHandelr(BaseHandler):
             'effect_type': '1'
         })
 
-    def gen_key(self, size, chars=None):
-        if chars is None:
-            chars = string.ascii_lowercase + string.ascii_uppercase + string.digits
-
-        return ''.join(random.choice(chars) for _ in range(size))
-
-
-class CallbackInterceptHandler(BaseHandler):
-    def post(self):
-        callback_data = self.request.body.decode()
-        callback_data = json.loads(callback_data)
-        order_id = callback_data["order_id"]
-        self.master.set("callback_data:{0}".format(order_id), callback_data)
-
 
 class CallbackDownstreamHandler(BaseHandler):
     @tornado.gen.coroutine
     def post(self):
         backurl = self.get_body_argument("backurl")
-        order_id = self.get_body_argument("order_id")
-        callback_data = self.master.get("callback_data:{0}".format(order_id))
+        callback_data = self.get_body_argument("callback_data")
+
         http_client = AsyncHTTPClient()
         try:
             url = backurl
@@ -87,9 +73,9 @@ class CallbackDownstreamHandler(BaseHandler):
             if response and response.code == 200:
                 resp_body = response.body.decode('utf8')
                 print("UPSTREAM RESP", resp_body)
-                self.finish({"data": callback_data})
+                self.finish({'status': 'Success'})
             else:
-                print('错误')
+                self.finish({'status': 'Fail'})
         except Exception as e:
             print('e:', e)
 
@@ -108,7 +94,7 @@ class SendMsgHandler(tornado.web.RequestHandler):
 
         if order_id == '' or facevalue == '' or plat_offer_id == '' or phone_id == '' or timestamp == '' or effect_type == '' or partner_no == '' or request_no == '':
             error = '缺少参数'
-            self.finish({"beforedata": error,"afterdata": error})
+            self.finish({"beforedata": error, "afterdata": error})
             return
 
         code = {
@@ -130,8 +116,8 @@ class SendMsgHandler(tornado.web.RequestHandler):
         before_aes = json.dumps(before_aes)
         print("加密前：", before_aes)
 
-        key = "JI8PprTZ8fJ4Efzq"
-        iv = "5697393085725902"
+        key = self.application.config["downstream"][partner_no]["pass"]
+        iv = self.application.config["downstream"][partner_no]["iv"]
 
         code = json.dumps(code)
         aes = AES.new(key, AES.MODE_CBC, iv)
@@ -157,6 +143,10 @@ class SendOrderHandler(BaseHandler):
     @tornado.gen.coroutine
     def post(self):
         body = self.get_body_argument("send_order")
+        phone_id = self.get_body_argument("phone_id")
+        facevalue = self.get_body_argument("facevalue")
+        plat_offer_id = self.get_body_argument("plat_offer_id")
+        order_id = self.get_body_argument("order_id")
 
         if body == '' or body == "缺少参数":
             self.finish({'resp_body': "缺少参数"})
@@ -166,7 +156,7 @@ class SendOrderHandler(BaseHandler):
 
         http_client = AsyncHTTPClient()
         try:
-            url = "http://localhost:7000/data/order"
+            url = "http://{0}:{1}/data/order".format(self.application.ip, self.application.port)
 
             response = yield http_client.fetch(url, method='POST', body=body, request_timeout=120)
 
@@ -178,7 +168,22 @@ class SendOrderHandler(BaseHandler):
         except Exception as e:
             print('e:', e)
 
-        self.finish({'resp_body': resp_body})
+        resp_data = json.loads(resp_body)
+        callback_data = None
+        if resp_data["orderstatus"] == "processing":
+            ordertime = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+            transactionid = int(time.time())
+            callback_data = {"ordertime": ordertime,
+                             "result_code": None,
+                             "transactionid": transactionid,
+                             "phone_id": phone_id,
+                             "facevalue": facevalue,
+                             "plat_offer_id": plat_offer_id,
+                             "order_id": order_id,
+                             "orderstatus": "fail"}
+            callback_data = json.dumps(callback_data)
+            print(callback_data)
+        self.finish({'resp_body': resp_body, 'callback_data': callback_data})
 
 
 # 1
@@ -207,45 +212,92 @@ class AjaxPartnerNoHandler(tornado.web.RequestHandler):
         self.finish({"error": error})
 
 
-#3
+# 3
 class AjaxPhoneIdHandler(tornado.web.RequestHandler):
     def post(self):
         error = None
         phone_id = self.get_body_argument("phone_id")
-        print(phone_id)
+
         if phone_id == '':
             error = "#请输入phone_id"
+            self.finish({"error": error})
+            return
         elif len(phone_id) != 11:
             error = "#请输入11位手机号"
+            self.finish({"error": error})
+            return
 
         self.finish({"error": error})
 
 
-#4
+# 4
 class AjaxPlatOfferIdHandler(tornado.web.RequestHandler):
     def post(self):
         error = None
         plat_offer_id = self.get_body_argument("plat_offer_id")
-        print(plat_offer_id)
+        phone_id = self.get_body_argument("phone_id")
+
         if plat_offer_id == '':
             error = "#请输入plat_offer_id"
+            self.finish({"error": error})
+            return
+
+        o, a = self.application.classifier.search(phone_id)  # o:1移动  a:JS
+
+        if o == 1:
+            value = Mobile(plat_offer_id)
+            if not value:
+                error = "#请输入移动手机号对应产品"
+
+        elif o == 2:
+            value = Unicom(plat_offer_id)
+            if not value:
+                error = "#请输入联通手机号对应产品"
+
+        elif o == 3:
+            value = Telecom(plat_offer_id)
+            if not value:
+                error = "#请输入电信手机号对应产品"
+
+        else:
+            error = "#手机号不存在"
 
         self.finish({"error": error})
 
 
-#5
+# 5
 class AjaxFacevalueHandler(tornado.web.RequestHandler):
     def post(self):
         error = None
+        phone_id = self.get_body_argument("phone_id")
+        plat_offer_id = self.get_body_argument("plat_offer_id")
         facevalue = self.get_body_argument("facevalue")
         print(facevalue)
         if facevalue == '':
             error = "#请输入facevalue"
+            self.finish({"error": error})
+            return
+
+        o, a = self.application.classifier.search(phone_id)  # o:1移动  a:JS
+        if o == 1:
+            value = Mobile(plat_offer_id)
+            if value != facevalue:
+                error = "#面值不对，请参考文档"
+
+        if o == 2:
+            value = Unicom(plat_offer_id)
+            if value != facevalue:
+                error = "#面值不对，请参考文档"
+
+        if o == 3:
+            value = Telecom(plat_offer_id)
+            if value != facevalue:
+                error = "#面值不对，请参考文档"
 
         self.finish({"error": error})
 
 
-#6
+# 6
 class AjaxOrderIdHandler(tornado.web.RequestHandler):
     def post(self):
         error = None
@@ -265,7 +317,7 @@ class AjaxEffectTypeHandler(tornado.web.RequestHandler):
         print(effect_type)
         if effect_type == '':
             error = "#请输入effect_type"
-        elif effect_type != 1:
+        elif effect_type != '1':
             error = "#effect_type建议为1"
 
         self.finish({"error": error})
